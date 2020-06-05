@@ -4,6 +4,7 @@ export default (defaultValue) => {
     const [value, setValue] = useState(defaultValue);
 
     const onChange = (e) => {
+        
         const {
             target:{value}
         } = e;

@@ -49,27 +49,37 @@ const Form = styled(Box)`
 export default ({
   setAction,
   action,
-  userName,
+  username,
   firstName,
   lastName,
   email,
-  onLogin
+  onSubmit,
+  password
 }) => (
   <Wrapper>
     <Form>
-      {action === "logIn" ? (
-        <form onSubmit={onLogin}>
+      {action === "logIn" && (
+        <form onSubmit={onSubmit}>
           <Input placeholder={"Email"} {...email} type="email" />     
           <Button text={"Log in"} />
         </form>
-      ) : (
-        <form onSubmit={onLogin}>
+      )} 
+      
+      {action === "signUp" && (
+        <form onSubmit={onSubmit}>
           <Input placeholder={"First name"} {...firstName} />
           <Input placeholder={"Last name"} {...lastName} />
           <Input placeholder={"Email"} {...email} type="email" />
-          <Input placeholder={"Username"} {...userName} />          
+          <Input placeholder={"Username"} {...username} />          
           <Button text={"Sign up"} />
         </form>
+      )}
+
+      {action === "confirm" && (
+          <form onSubmit={onSubmit}>
+              <Input placeholder={"Input your Passwrod"} {...password} type="password" />
+              <Button text={"confirm"}/>
+          </form>
       )}
     </Form>
     <StateChanger>

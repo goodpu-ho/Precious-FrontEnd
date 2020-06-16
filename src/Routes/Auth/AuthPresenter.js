@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import Input from "../../Component/Input";
+import {Helmet} from "react-helmet";
 import Button from "../../Component/Button";
 
 const Wrapper = styled.div`
@@ -59,27 +60,42 @@ export default ({
   <Wrapper>
     <Form>
       {action === "logIn" && (
+        <>
+        <Helmet>
+          <title>Log In | Prismagram</title>
+        </Helmet>
         <form onSubmit={onSubmit}>
-          <Input placeholder={"Email"} {...email} type="email" />     
+          <Input placeholder={"Email"} {...email} type="email" />
           <Button text={"Log in"} />
         </form>
+      </>
       )} 
       
       {action === "signUp" && (
+        <>
+        <Helmet>
+          <title>Sign Up | Prismagram</title>
+        </Helmet>
         <form onSubmit={onSubmit}>
           <Input placeholder={"First name"} {...firstName} />
           <Input placeholder={"Last name"} {...lastName} />
           <Input placeholder={"Email"} {...email} type="email" />
-          <Input placeholder={"Username"} {...username} />          
+          <Input placeholder={"Username"} {...username} />
           <Button text={"Sign up"} />
         </form>
+      </>
       )}
 
       {action === "confirm" && (
-          <form onSubmit={onSubmit}>
-              <Input placeholder={"Input your Passwrod"} {...password} />
-              <Button text={"confirm"}/>
-          </form>
+        <>
+        <Helmet>
+          <title>Confirm Secret | Prismagram</title>
+        </Helmet>
+        <form onSubmit={onSubmit}>
+          <Input placeholder="Paste your secret" required {...password} />
+          <Button text={"Confirm"} />
+        </form>
+      </>
       )}
     </Form>
     

@@ -1,6 +1,7 @@
 import React from "react";
 import { gql } from "apollo-boost";
 import { useQuery } from "react-apollo-hooks";
+import {Helmet} from "react-helmet";
 import styled from "styled-components";
 import Loader from "../Component/Loader";
 import Post from "../Component/Post";
@@ -22,6 +23,7 @@ const FEED_QUERY = gql`
       }
 
       isLiked
+      likeCount
       comments {
         id
         text
@@ -29,8 +31,12 @@ const FEED_QUERY = gql`
           id
           username
         }
-        createAt
+        createdAt
+        updatedAt
       }
+
+      createdAt
+      updatedAt
     }
   }
 `;
@@ -47,6 +53,9 @@ export default () => {
   console.log("feed test", data, loading);
   return (
     <Wrapper>
+        <Helmet>
+        <title>Feed | Prismagram</title>
+      </Helmet>
       {loading && <Loader />}
       {!loading &&
         data &&
@@ -61,6 +70,8 @@ export default () => {
             isLiked={post.isLiked}
             comments={post.comments}
             createdAt={post.createdAt}
+            location={post.location}
+            caption={post.caption}
           />
         ))}
     </Wrapper>

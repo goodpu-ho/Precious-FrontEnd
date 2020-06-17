@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import { useMutation } from "react-apollo-hooks";
 import useInput from "../../Hooks/useInput";
 import PostPresenter from "./PostPresenter";
+import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
+import { toast } from "react-toastify";
 
 const PostContainer = ({
   id,
@@ -12,40 +15,64 @@ const PostContainer = ({
   comments,
   createdAt,
   caption,
-  location
+  location,
 }) => {
-    const [isLikedS, setIsLiked] = useState(isLiked);
-    const [likeCountS, setLikeCount] = useState(likeCount);    
-    const [currentItem, setCurrentItem] = useState(0);
-    const comment = useInput("");
-    
-    const slide = () => {
-        const totalFiles = files.length;
-        if(currentItem === totalFiles-1){
-            setTimeout(() => setCurrentItem(0), 3000);
-        } else {
-            setTimeout(() => setCurrentItem(currentItem+1), 3000);
-        }
+  const [isLikedS, setIsLiked] = useState(isLiked);
+  const [likeCountS, setLikeCount] = useState(likeCount);
+  const [currentItem, setCurrentItem] = useState(0);
+  const comment = useInput("");
+
+  const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
+    variables: { postId: id },
+  });
+
+  const [addCommentMutation] = useMutation(ADD_COMMENT, {
+    variables: {
+      text: comment.value,
+      postId: id,
+    },
+  });
+
+  const slide = () => {
+    const totalFiles = files.length;
+    if (currentItem === totalFiles - 1) {
+      setTimeout(() => setCurrentItem(0), 3000);
+    } else {
+      setTimeout(() => setCurrentItem(currentItem + 1), 3000);
     }
-    useEffect( () => {
-        slide();
-    }, [currentItem]);
+  };
 
-    console.log(`cuurentitem : ${currentItem}`);
+  useEffect(() => {
+    slide();
+  }, [currentItem]);
 
-  return <PostPresenter 
-    user={user}
-    files={files}
-    likeCount={likeCountS}
-    isLiked={isLikedS}
-    location={location}
-    comments={comments}
-    createdAt={createdAt}
-    newComment = {comment}
-    setIsLiked = {setIsLiked}
-    setLikeCount = {setLikeCount}
-    currentItem = {currentItem}
-  />;
+  const toggleLike = () => {
+    toggleLikeMutation();
+    if (isLikedS === true) {
+      setIsLiked(false);
+      setLikeCount(likeCountS - 1);
+    } else {
+      setIsLiked(true);
+      setLikeCount(likeCountS + 1);
+    }
+  };
+
+  return (
+    <PostPresenter
+      user={user}
+      files={files}
+      likeCount={likeCountS}
+      isLiked={isLikedS}
+      location={location}
+      comments={comments}
+      createdAt={createdAt}
+      newComment={comment}
+      setIsLiked={setIsLiked}
+      setLikeCount={setLikeCount}
+      currentItem={currentItem}
+      toggleLike={toggleLike}
+    />
+  );
 };
 
 PostContainer.prototype = {
@@ -75,7 +102,7 @@ PostContainer.prototype = {
   ).isRequired,
   createdAt: PropTypes.string.isRequired,
   caption: PropTypes.string.isRequired,
-  location: PropTypes.string
+  location: PropTypes.string,
 };
 
 export default PostContainer;

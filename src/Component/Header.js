@@ -6,6 +6,7 @@ import { useQuery } from "react-apollo-hooks";
 import useInput from "../Hooks/useInput";
 import Input from "./Input";
 import { Compass, User, HeartEmpty, Logo } from "./Icon";
+import {ME} from "../SharedQueries"
 
 const Header = styled.header`
   width: 100%;
@@ -61,14 +62,6 @@ const HeaderLink = styled(Link)`
   }
 `;
 
-const ME = gql`
-  {
-    me {
-      username
-    }
-  }
-`;
-
 export default withRouter(({ history }) => {
   const search = useInput("");
   const { data, loading } = useQuery(ME); // loading 추가
@@ -90,7 +83,11 @@ export default withRouter(({ history }) => {
         </HeaderColum>
         <HeaderColum>
           <form onSubmit={onSearchSubmmit}>
-            <SearchInput placeholder={"Searach"} {...search} />
+            <SearchInput 
+                placeholder={"Searach"} 
+                value = {search.value}    
+                onChange = {search.onChange}
+            />
           </form>
         </HeaderColum>
         <HeaderColum>

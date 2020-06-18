@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { useMutation } from "react-apollo-hooks";
+import { useMutation, useQuery } from "react-apollo-hooks";
 import useInput from "../../Hooks/useInput";
 import PostPresenter from "./PostPresenter";
 import { TOGGLE_LIKE, ADD_COMMENT } from "./PostQueries";
-import { toast } from "react-toastify";
+import {ME} from "../../SharedQueries"
+
 
 const PostContainer = ({
   id,
@@ -20,6 +21,9 @@ const PostContainer = ({
   const [isLikedS, setIsLiked] = useState(isLiked);
   const [likeCountS, setLikeCount] = useState(likeCount);
   const [currentItem, setCurrentItem] = useState(0);
+  const [selfComments, setSelfComments] = useState([]);
+  const {data : meQuery} = useQuery(ME);
+
   const comment = useInput("");
 
   const [toggleLikeMutation] = useMutation(TOGGLE_LIKE, {
@@ -57,6 +61,23 @@ const PostContainer = ({
     }
   };
 
+  const onKeyPress = async (event) => {
+    const {which} = event;
+    if(which === 13){
+        event.preventDefault();
+        try{
+            const {data : {addComment }} = await addCommentMutation();
+            console.log(addComment);
+            setSelfComments([...selfComments, addComment]);
+            comment.setValue("");
+        }catch(e){
+            console.log(e.message);
+        }
+        
+        
+    }
+  }
+
   return (
     <PostPresenter
       user={user}
@@ -71,6 +92,8 @@ const PostContainer = ({
       setLikeCount={setLikeCount}
       currentItem={currentItem}
       toggleLike={toggleLike}
+      onKeyPress={onKeyPress}
+      selfComments={selfComments}
     />
   );
 };

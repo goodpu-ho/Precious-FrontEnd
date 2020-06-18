@@ -1,15 +1,15 @@
 import React from "react";
 import styled from "styled-components";
-import TextareaAutosize from 'react-autosize-textarea';
+import TextareaAutosize from "react-autosize-textarea";
 import FatText from "../../Component/FatText";
 import Avatar from "../Avatar";
-import { HeartFull, HeartEmpty, Comment } from "../Icon";
+import { HeartFull, HeartEmpty, Comment as CommentIcon } from "../Icon";
 
 const Post = styled.div`
   ${(props) => props.theme.whiteBox};
   width: 100%;
   max-width: 600px;
-  margin-top:20px;
+  margin-top: 20px;
   user-select: none;
 `;
 
@@ -30,12 +30,12 @@ const Location = styled.span`
 `;
 
 const Files = styled.div`
-    position: relative;
-    padding-bottom: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    flex-shrink: 0;
+  position: relative;
+  padding-bottom: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  flex-shrink: 0;
 `;
 
 const File = styled.div`
@@ -44,11 +44,11 @@ const File = styled.div`
   height: 600px;
   position: absolute;
   top: 0;
-  background-image: url(${props => props.src});
+  background-image: url(${(props) => props.src});
   background-size: cover;
-  background-position: center;  
+  background-position: center;
   transition: opacity 0.5s linear;
-  opacity: ${props => (props.showing ? 1 : 0)};
+  opacity: ${(props) => (props.showing ? 1 : 0)};
 `;
 
 const Button = styled.span`
@@ -80,13 +80,26 @@ const Timestamp = styled.span`
 `;
 
 const Textarea = styled(TextareaAutosize)`
-    border:none;
-    width:100%;
-    resize:none;
-    font-size:14px;
-    font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    &:focus{
-        outline:none;
+  border: none;
+  width: 100%;
+  resize: none;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  &:focus {
+    outline: none;
+  }
+`;
+
+const Comments = styled.ul`
+    margin-top:10px;
+
+`;
+
+const Comment = styled.li`
+    margin-bottom:7px;
+    span{
+        margin-right:5px;
     }
 `;
 
@@ -99,7 +112,10 @@ export default ({
   createdAt,
   newComment,
   currentItem,
-  toggleLike
+  toggleLike,
+  onKeyPress,
+  comments,
+  selfComments
 }) => (
   <Post>
     <Header>
@@ -110,18 +126,54 @@ export default ({
       </UserColumn>
     </Header>
     <Files>
-      {files && files.map((file, index) => <File key={file.id} src={file.url} showing={index === currentItem}/>)}
+      {files &&
+        files.map((file, index) => (
+          <File key={file.id} src={file.url} showing={index === currentItem} />
+        ))}
     </Files>
     <Meta>
       <Buttons>
-        <Button onClick={toggleLike}>{isLiked ? <HeartFull /> : <HeartEmpty />}</Button>
+        <Button onClick={toggleLike}>
+          {isLiked ? <HeartFull /> : <HeartEmpty />}
+        </Button>
         <Button>
-          <Comment />
+          <CommentIcon />
         </Button>
       </Buttons>
       <FatText text={likeCount === 1 ? "1 like" : `${likeCount} likes`} />
+
+      {comments && (
+        <Comments>
+            {comments.map(comment => (
+                <Comment key={comment.id}>
+                    <FatText text={comment.user.username}/>
+                    {comment.text}
+                </Comment>          
+            ))
+            }
+        </Comments>
+        )
+      }
+
+    {selfComments && (
+        <Comments>
+            {selfComments.map(comment => (
+                <Comment key={comment.id}>
+                    <FatText text={comment.user.username}/>
+                    {comment.text}
+                </Comment>          
+            ))
+            }
+        </Comments>
+        )
+      }
       <Timestamp>{createdAt}</Timestamp>
-      <Textarea placeholder={"Add a comment..."} {...newComment}/>
-    </Meta>    
+      <Textarea
+        placeholder={"Add a comment..."}
+        value={newComment.value}
+        onChange={newComment.onChange}
+        onKeyPress={onKeyPress}
+      />
+    </Meta>
   </Post>
 );

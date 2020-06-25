@@ -67,7 +67,7 @@ const PostContainer = ({
         event.preventDefault();
         try{
             const {data : {addComment }} = await addCommentMutation();
-            console.log(addComment);
+            // console.log(addComment);
             setSelfComments([...selfComments, addComment]);
             comment.setValue("");
         }catch(e){

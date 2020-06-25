@@ -4,21 +4,29 @@ import PropTypes from "prop-types";
 import FatText from "../../Component/FatText";
 import Loader from "../../Component/Loader";
 import UserCard from "../../Component/UserCard";
+import SqurePost from "../../Component/SqurePost";
 
 const Section = styled.div`
-    display:grid;        
-    grid-gap : 25px;
-    grid-template-columns:repeat(4, 1fr);
-    grid-template-rows:160px;
-    grid-auto-rows:160px;    
-    margin-bottom:50px;
+  display: grid;
+  grid-gap: 25px;
+  grid-template-columns: repeat(4, 160px);
+  grid-template-rows: 160px;
+  grid-auto-rows: 160px;
+  margin-bottom: 50px;
 `;
 
 const Wrapper = styled.div`
-  height: 50vh;  
+  height: 50vh;
 `;
 
-const SearchPresenter = ({ searchTerm, loading, data }) => {
+const PostSection = styled(Section)`
+  grid-template-columns: repeat(4, 200px);
+  grid-template-rows: 200px;
+  grid-auto-rows: 200px;
+`;
+
+const SearchPresenter = ({ searchTerm, loading, data }) => {    
+    
   if (searchTerm === undefined) {
     return (
       <Wrapper>
@@ -32,6 +40,7 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
       </Wrapper>
     );
   } else if (data && data.searchUser && data.searchPost) {
+    // console.log(data.searchPost);
     return (
       <Wrapper>
         <Section>
@@ -51,13 +60,20 @@ const SearchPresenter = ({ searchTerm, loading, data }) => {
           )}
         </Section>
 
-        <Section>
-            {data.searchPost.length === 0 ? (
-                <FatText text={"No Post Found"}/>
-            ) : (
-                data.searchPost.map( post => null)
-            )}
-        </Section>
+        <PostSection>
+          {data.searchPost.length === 0 ? (
+            <FatText text={"No Post Found"} />
+          ) : (
+            data.searchPost.map( post => (                
+              <SqurePost
+                key={post.id}
+                likeCount={post.likeCount}
+                commentCount={post.commentCount}
+                file={post.files[0]}
+              />
+            ))
+          )}
+        </PostSection>
       </Wrapper>
     );
   }

@@ -50,7 +50,7 @@ const Wrapper = styled.div`
 
 export default () => {
   const { data, loading } = useQuery(FEED_QUERY);
-  console.log("feed test", data, loading);
+//   console.log("feed test", data, loading);
   return (
     <Wrapper>
         <Helmet>

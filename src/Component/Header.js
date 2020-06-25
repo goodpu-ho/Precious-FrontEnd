@@ -66,8 +66,7 @@ export default withRouter(({ history }) => {
   const search = useInput("");
   const { data, loading } = useQuery(ME); // loading 추가
   if (loading) return "";
-  const { me } = data;
-  console.log(me);
+  const { me } = data;  
 
   const onSearchSubmmit = (e) => {
     e.preventDefault();
